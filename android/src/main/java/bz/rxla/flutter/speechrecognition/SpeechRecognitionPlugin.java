@@ -134,6 +134,11 @@ public class SpeechRecognitionPlugin implements MethodCallHandler, RecognitionLi
     }
 
     @Override
+    public void onEndOfSpeech() {
+        Log.d(LOG_TAG, "onEndOfSpeech");
+    }
+
+    @Override
     public void onEvent(int eventType, Bundle params) {
         Log.d(LOG_TAG, "onEvent : " + eventType);
     }
