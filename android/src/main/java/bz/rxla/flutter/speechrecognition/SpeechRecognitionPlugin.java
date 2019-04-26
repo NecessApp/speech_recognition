@@ -2,6 +2,7 @@ package bz.rxla.flutter.speechrecognition;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -27,6 +28,7 @@ public class SpeechRecognitionPlugin implements MethodCallHandler, RecognitionLi
     private MethodChannel speechChannel;
     private String transcription = "";
     private Intent recognizerIntent;
+    private Context context;
     private Activity activity;
 
     /**
@@ -34,15 +36,16 @@ public class SpeechRecognitionPlugin implements MethodCallHandler, RecognitionLi
      */
     public static void registerWith(Registrar registrar) {
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "speech_recognition");
-        channel.setMethodCallHandler(new SpeechRecognitionPlugin(registrar.activity(), channel));
+        channel.setMethodCallHandler(new SpeechRecognitionPlugin(registrar.activity(), registrar.context(), channel));
     }
 
-    private SpeechRecognitionPlugin(Activity activity, MethodChannel channel) {
+    private SpeechRecognitionPlugin(Activity activity, Context context, MethodChannel channel) {
         this.speechChannel = channel;
         this.speechChannel.setMethodCallHandler(this);
+        this.context = context;
         this.activity = activity;
 
-        speech = SpeechRecognizer.createSpeechRecognizer(activity.getApplicationContext());
+        speech = SpeechRecognizer.createSpeechRecognizer(context);
         speech.setRecognitionListener(this);
 
         recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
